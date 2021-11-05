@@ -4,27 +4,24 @@
  * Created: 10/30/2021 1:49:42 PM
  * Author : Wobberr
  */ 
+#define F_CPU 12000000
 
 #include <avr/io.h>
-
+#include <util/delay.h>
+#include "USART.h"
+#include "I2C.h"
+#include "SPI.h"
 
 int main(void)
 {
-    /* Replace with your application code */
+	I2C_Init();
+	
     while (1) 
-    {
-		DDRC|=1<<1;
-		PORTC^=1<<1;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+    {	
+		_delay_ms(50);
+		I2C_Start();
+		_delay_ms(200);
+		I2C_Stop();
     }
 }
 
