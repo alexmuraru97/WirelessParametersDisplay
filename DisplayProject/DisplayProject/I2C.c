@@ -42,7 +42,7 @@ void I2C_Init(unsigned long SCL,enum I2C_Prescaler prescaler){
 	}
 	
 	//Set Baud Rate
-	TWBR=TWBR_CALC_NO_PRSC(F_CPU,SCL)/prescaler;
+	TWBR=TWBR_CALC_NO_PRSC(F_CPU,SCL);
 }
 
 uint8_t I2C_Start(void){
