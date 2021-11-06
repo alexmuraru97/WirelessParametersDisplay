@@ -120,6 +120,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Env.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="I2C.c">
       <SubType>compile</SubType>
     </Compile>
