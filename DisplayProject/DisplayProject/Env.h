@@ -9,8 +9,10 @@
 #ifndef ENV_H_
 #define ENV_H_
 
-#define F_CPU 12000000
 #include <avr/io.h>
 
+#ifndef F_CPU
+	# define F_CPU 12000000UL
+#endif
 
 #endif /* ENV_H_ */

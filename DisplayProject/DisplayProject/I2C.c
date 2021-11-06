@@ -7,7 +7,7 @@
 
 #include "I2C.h"
 
-void I2C_Init(void){
+void I2C_Init(unsigned long SCL,enum I2C_Prescaler prescaler){
 	//OUTPUT+PULLUP PC5+PC4 (SDA/SCL)
 	DDRC&=~((1<<DDC4)|(1<<DDC5));
 	PORTC|=(1<<PORTC4)|(1<<PORTC5);
@@ -15,8 +15,34 @@ void I2C_Init(void){
 	//Enable PULLUP configuration
 	MCUCR&=~(1<<PUD);
 	
-
-	//TODO set frq
+	switch(prescaler){
+		case I2C_Prescaler_1:
+			//Prescaler 1->TWPS1 =0, TWPS0=0
+			TWSR&=~((1<<TWPS1)|(1<<TWPS0));
+		break;
+		case I2C_Prescaler_4:
+			//Prescaler 1->TWPS1 =0, TWPS0=1
+			TWSR&=~((1<<TWPS1)|(1<<TWPS0));
+			TWSR|=(1<<TWPS0);
+		break;
+		case I2C_Prescaler_16:
+			//Prescaler 1->TWPS1 =1, TWPS0=0
+			TWSR&=~((1<<TWPS1)|(1<<TWPS0));	
+			TWSR|=(1<<TWPS1);	
+		break;
+		case I2C_Prescaler_64:
+			//Prescaler 1->TWPS1 =1, TWPS0=1
+			TWSR&=~((1<<TWPS1)|(1<<TWPS0));	
+			TWSR|=(1<<TWPS1)|(1<<TWPS0);
+		break;
+		default:
+			//default case-> prescaler 1
+			TWSR&=~((1<<TWPS1)|(1<<TWPS0));
+		break;
+	}
+	
+	//Set Baud Rate
+	TWBR=TWBR_CALC_NO_PRSC(F_CPU,SCL)/prescaler;
 }
 
 uint8_t I2C_Start(void){
@@ -41,7 +67,7 @@ void I2C_Stop(void){
 
 uint8_t I2C_Write_Slave_Addr(uint8_t addr_op)
 {
-	TWDR = addr_op<<1;
+	TWDR = addr_op;
 	TWCR = (1 << TWINT) | (1 << TWEN);
 	
 	while (!(TWCR & (1 << TWINT)));
