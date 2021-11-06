@@ -88,17 +88,16 @@ uint8_t I2C_Write(uint8_t data)
 	while (!(TWCR & (1 << TWINT)));
 	if (TW_STATUS != TW_MT_DATA_ACK)
 	{
-		//If data was not acknowledged
 		return TW_STATUS;
 	}
 	return 0;
 }
 	
 	
-uint8_t I2C_Read(bool isAcknowledgeable)
+uint8_t I2C_Read(uint8_t * return_data, bool is_acknowlegeable)
 {
 	//if isAcknowledgeable -> respond to slave module with an ACK signal
-	if (isAcknowledgeable)
+	if (is_acknowlegeable)
 	{
 		TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWEA);
 		while (!(TWCR & (1 << TWINT)));
@@ -116,6 +115,6 @@ uint8_t I2C_Read(bool isAcknowledgeable)
 			return TW_STATUS;
 		}
 	}
-	uint8_t received_data = TWDR;
-	return received_data;
+	*return_data=TWDR;
+	return 0;
 }

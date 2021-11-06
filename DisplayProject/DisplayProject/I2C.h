@@ -24,6 +24,6 @@ void I2C_Stop(void);
 
 uint8_t I2C_Write_Slave_Addr(uint8_t addr_op);
 uint8_t I2C_Write(uint8_t data);
-uint8_t I2C_Read(bool isAcknowledgeable);
+uint8_t I2C_Read(uint8_t * return_data, bool is_acknowlegeable);
 
 #endif /* I2C_H_ */
