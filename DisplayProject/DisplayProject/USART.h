@@ -19,5 +19,8 @@ void USART_Init(unsigned int baudrate);
 void USART_Write(unsigned char data);
 unsigned char USART_Read(void);
 
+void USART_Write_Integer(int number);
+void USART_Write_String(char* char_arr, uint8_t size);
+void USART_Write_Hex(uint16_t hex_number);
 
 #endif /* USART_H_ */
