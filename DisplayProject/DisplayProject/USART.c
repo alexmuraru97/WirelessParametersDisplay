@@ -6,8 +6,54 @@
  */ 
 #include "USART.h"
 
-void USART_Init(unsigned int baudrate, bool isFast)
+void USART_Init(unsigned int baudrate, bool isFast, enum USART_Parity parity, enum USART_Stop_Bits stop_bits)
 {
+	//Set USART registers to initial data sheet values
+	UCSR0A=0x20;
+	UCSR0B=0x00;
+	UCSR0C=0x06;
+	
+	switch(stop_bits){
+		case USART_Stop_Bits_1:
+			//1 Stop Bit-> USBS0 = 0
+			UCSR0C &= ~(1<<USBS0);
+		break;
+		
+		case USART_Stop_Bits_2:
+			//2 Stop Bits-> USBS0 = 1
+			UCSR0C |= (1<<USBS0);
+		break;
+		
+		default:
+			//default case->  1 stop bit
+			UCSR0C &= ~(1<<USBS0);
+		break;
+	}
+	
+	switch(parity){
+		case USART_Parity_Disabled:
+			//UPM01 = 0 && UPM00 = 0
+			UCSR0C &= ~((1<<UPM01)|(1<<UPM01));
+		break;
+		
+		case USART_Parity_Even:
+			//UPM01 = 1 && UPM00 = 0
+			UCSR0C &= ~(1<<UPM00);
+			UCSR0C |= (1<<UPM01);
+		break;
+		
+		case USART_Parity_Odd:
+			//UPM01 = 1 && UPM00 = 1
+			UCSR0C |= (1<<UPM00);
+			UCSR0C |= (1<<UPM01);
+		break;
+		
+		default:
+			//default case -> no parity
+			UCSR0C &= ~((1<<UPM01)|(1<<UPM01));
+		break;
+	}
+	
 	if(isFast){
 		UBRR0H = (unsigned char)(BAUD_FAST_RATE(baudrate) >> 8);
 		UBRR0L = (unsigned char)(BAUD_FAST_RATE(baudrate) & 0xFF);	
@@ -29,10 +75,30 @@ void USART_Write(unsigned char data)
 	UDR0=data;	
 }
 
-unsigned char USART_Read(void)
+uint8_t USART_Read(unsigned char* read_data)
 {
+	
+	unsigned char return_data=0;
 	while(!(UCSR0A&(1<<RXC0))){;}
-	return UDR0;	
+	
+	//if parity flag is set, check for error
+	if((UCSR0C&(1<<UPM01))&&(UCSR0A&(1<<UPE0))){
+		return USART_Error_Parity;
+	}
+	
+	//check for frame error
+	if(UCSR0A&(1<<FE0)){
+		return USART_Error_Frame;
+	}
+	
+	//check for data overrun error
+	if(UCSR0A&(1<<DOR0)){
+		return USART_Error_Data_Overrun;
+	}
+	
+	return_data=UDR0;
+	*read_data=return_data;
+	return USART_Error_Ok;
 }
 
 void USART_Write_Integer(int number)
