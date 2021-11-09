@@ -13,8 +13,9 @@
 #define USART_H_
 
 #define BAUD_RATE(BAUD) (F_CPU/16/BAUD - 1)
+#define BAUD_FAST_RATE(BAUD) (F_CPU/8/BAUD - 1)
 
-void USART_Init(unsigned int baudrate);
+void USART_Init(unsigned int baudrate, bool isFast);
 void USART_Write(unsigned char data);
 unsigned char USART_Read(void);
 void USART_Write_Integer(int number);
