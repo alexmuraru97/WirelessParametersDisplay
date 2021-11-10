@@ -6,7 +6,7 @@
  */ 
 #include "USART.h"
 
-void USART_Init(unsigned int baudrate, bool isFast, enum USART_Parity parity, enum USART_Stop_Bits stop_bits)
+void USART_Init(unsigned long baudrate, bool isFast, enum USART_Parity parity, enum USART_Stop_Bits stop_bits)
 {
 	//Set USART registers to initial data sheet values
 	UCSR0A=0x20;
@@ -169,8 +169,7 @@ void USART_Write_String(char* char_arr, uint8_t size)
 }
 
 void USART_Write_New_Line(void){
-	USART_Write(0x0A);
-	USART_Write(0x0D);
+	USART_Write('\n');
 }
 
 void USART_Write_Hex_Data(void* data, unsigned int size_bytes)

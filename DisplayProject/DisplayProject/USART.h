@@ -19,7 +19,7 @@ enum USART_Parity{USART_Parity_Disabled=0, USART_Parity_Even=1, USART_Parity_Odd
 enum USART_Stop_Bits{USART_Stop_Bits_1=1, USART_Stop_Bits_2=2};
 enum USART_Error {USART_Error_Ok=0, USART_Error_Parity=1, USART_Error_Frame=2, USART_Error_Data_Overrun=3};
 	
-void USART_Init(unsigned int baudrate, bool isFast, enum USART_Parity parity, enum USART_Stop_Bits stop_bits);
+void USART_Init(unsigned long baudrate, bool isFast, enum USART_Parity parity, enum USART_Stop_Bits stop_bits);
 void USART_Write(unsigned char data);
 uint8_t USART_Read(unsigned char* read_data);
 void USART_Write_Integer(int number);
