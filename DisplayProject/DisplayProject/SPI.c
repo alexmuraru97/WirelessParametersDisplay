@@ -65,6 +65,12 @@ uint8_t SPI_Init(enum SPI_Transmission_Mode transmissionMode, bool isSPI2X, enum
 		SPCR|= (1<<DORD);
 	}
 	
+	//Enable SPI Interrupts
+	SPCR |= (1<<SPIE);
+	
+	//Enable SPI Module
+	SPCR |= (1<<SPE);
+	
 	return SPI_Error_Ok;
 }
 
