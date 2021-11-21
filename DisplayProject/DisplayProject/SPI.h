@@ -18,8 +18,12 @@ enum SPI_Error {SPI_Error_Ok=0, SPI_Error_Init=1};
 
 
 uint8_t SPI_Init(enum SPI_Transmission_Mode transmissionMode, bool isSPI2X, enum SPI_Prescaler prescaler, enum SPI_Data_Mode dataMode, bool isLSBFirst, bool isMaster);
-void SPI_Write(char cData);
-char SPI_Read(void);
+
+void SPI_Write(uint8_t  cData);
+uint8_t SPI_Read(void);
+
+void SPI_ReadArray(uint8_t* receive_data, uint8_t size);
+void SPI_WriteArray(uint8_t* send_data, uint8_t size)
 
 
 #endif /* SPI_H_ */

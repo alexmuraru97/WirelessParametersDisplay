@@ -42,7 +42,7 @@ uint8_t SPI_Init(enum SPI_Transmission_Mode transmissionMode, bool isSPI2X, enum
 	else
 	{
 		//If not a master node, then SS pin shall be pulled-up High, and set as Input
-		DDRB &= ~ (1<<DDB2);
+		DDRB &= ~(1<<DDB2);
 		PORTB |= (1<<PORTB2);	
 	}
 	
@@ -68,13 +68,29 @@ uint8_t SPI_Init(enum SPI_Transmission_Mode transmissionMode, bool isSPI2X, enum
 	return SPI_Error_Ok;
 }
 
-void SPI_Write(char cData)
+void SPI_Write(uint8_t  cData)
 {
 	SPDR = cData;
 	while(!(SPSR & (1<<SPIF)));
 }
 
-char SPI_Read(void) {
+uint8_t SPI_Read(void) {
 	while(!(SPSR & (1<<SPIF)));
 	return SPDR;
+}
+
+void SPI_WriteArray(uint8_t* send_data, uint8_t size)
+{
+	while(size--)
+	{
+		SPI_Write(*send_data++);
+	}
+}
+
+void SPI_ReadArray(uint8_t* receive_data, uint8_t size)
+{
+	while(size--)
+	{
+		*receive_data++ = SPI_Read();
+	}
 }
