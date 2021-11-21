@@ -67,6 +67,9 @@ void USART_Init(unsigned long baudrate, bool isFast, enum USART_Parity parity, e
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0); 
 	DDRD |= (1 << DDD1);
 	DDRD &= ~(1 << DDD0);
+	
+	//Enable interrupt for received data
+	UCSR0B |= (1<<RXCIE0);
 }
 
 void USART_Write(unsigned char data)
